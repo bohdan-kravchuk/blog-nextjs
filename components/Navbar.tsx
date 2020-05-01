@@ -5,7 +5,7 @@ export const Navbar = () => {
   return (
     <NavbarContainer>
       <Link href="/"><a>Home</a></Link>
-      <Link href="/post-creator"><a>Create post</a></Link>
+      <Link href="/new"><a>Create post</a></Link>
     </NavbarContainer>
   )
 }
@@ -26,9 +26,4 @@ const NavbarContainer = styled.nav`
     opacity: 1;
     text-decoration: none;
   }
-`
-
-const Logo = styled.img`
-  height: 3rem;
-  margin-right: 1rem;
 `

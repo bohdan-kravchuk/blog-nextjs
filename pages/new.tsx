@@ -4,16 +4,19 @@ import {useState} from 'react';
 import axios from '../axios/axios-blog';
 import Head from 'next/head';
 
-const PostCreator = () => {
+const createPost = (postData: object) => {
+  const raw = JSON.stringify(postData)
+  axios.post('/posts', raw, {headers: {"Content-Type": "application/json"}})
+}
+
+
+const New = () => {
   let [title, setTitle] = useState<string>('')
   let [body, setBody] = useState<string>('')
  
   const createHandler = () => {
     if (title.trim() && body.trim()) {
-      let raw = JSON.stringify({title, body})
-      axios.post('/posts', raw, {headers: {"Content-Type": "application/json"}})
-        .then(response => console.log(response))
-        .catch(err => console.log(err))
+      createPost({title, body})
       setTitle('')
       setBody('')
     }
@@ -62,10 +65,10 @@ const PostCreator = () => {
   )
 }
 
-export default PostCreator
+export default New
 
 const Form = styled.form`
-  border: 1px solid #eaeaea;
+  border: 2px solid #eaeaea;
   box-shadow: 0 2px 6px rgba(0,0,0,0.15);
   padding: 3rem;
   border-radius: 5px;
@@ -86,16 +89,16 @@ const Form = styled.form`
 `
 
 const Button = styled.button`
-    border-radius: 5px;
-    padding: 1rem 3rem;
-    cursor: pointer;
-    background: #26a69a;
-    text-align: center;
-    outline: 0;
-    box-shadow: 0 2px 2px 0 rgba(0,0,0,0.14), 0 3px 1px -2px rgba(0,0,0,0.12), 0 1px 5px 0 rgba(0,0,0,0.2);
-    border: none;
-    color: white;
-    text-transform: uppercase;
+  border-radius: 5px;
+  padding: 1rem 3rem;
+  cursor: pointer;
+  background: #26a69a;
+  text-align: center;
+  outline: 0;
+  box-shadow: 0 2px 2px 0 rgba(0,0,0,0.14), 0 3px 1px -2px rgba(0,0,0,0.12), 0 1px 5px 0 rgba(0,0,0,0.2);
+  border: none;
+  color: white;
+  text-transform: uppercase;
 `
 
 const Center = styled.div`

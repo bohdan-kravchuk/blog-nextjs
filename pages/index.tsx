@@ -4,7 +4,6 @@ import { GetStaticProps } from 'next'
 import {PostsList} from '../components/PostsList';
 import axios from '../axios/axios-blog';
 
-
 interface HomeProps {
   posts: {
     id: number
@@ -19,9 +18,7 @@ const Home: React.FC<HomeProps> = ({posts}: HomeProps) => {
       <Head>
         <title>{siteTitle}</title>
       </Head>
-      <section>
-        <PostsList posts={posts}/>
-      </section>
+      <PostsList posts={posts} />
     </Layout>
   )
 }

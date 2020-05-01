@@ -32,13 +32,6 @@ export const Layout: React.FC<LayoutProps> = ({children, post}: LayoutProps) => 
         <Navbar />
         <MainContainer>
           <main>{children}</main>
-          {post && (
-            <BackToHome>
-              <Link href="/">
-                <a>← Back to home</a>
-              </Link>
-            </BackToHome>
-          )}
         </MainContainer>
         <Footer />
     </Container>
@@ -48,19 +41,17 @@ export const Layout: React.FC<LayoutProps> = ({children, post}: LayoutProps) => 
 const Container = styled.div`
   box-sizing: border-box;
   position: relative;
-  padding-bottom: 24px; /* Height of footer */
+  padding-bottom: 114px;
   min-height: 100%;
 `
 
 const MainContainer = styled.div`
   max-width: 80rem;
   padding: 0 1rem;
-  margin: 3rem auto 6rem;
+  margin: 5rem auto 0;
   font-size: 2rem;
 `
 
-const BackToHome = styled.div`
-  margin: 3rem 0 0;
-`
+
 
 

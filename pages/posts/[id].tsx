@@ -1,11 +1,25 @@
 import {Layout} from '../../components/Layout'
 import Head from 'next/head'
-import { GetStaticProps, GetStaticPaths} from 'next'
+import {GetStaticPaths, GetStaticProps} from 'next'
 import styled from 'styled-components'
 import axios from '../../axios/axios-blog';
+import Link from 'next/link';
+import {Comments} from '../../components/Comments';
 
+interface PostProps {
+  post: {
+    title: string
+    id: number
+    body: string
+    comments: {
+      id: number
+      postId: number
+      body: string
+    }[]
+  }
+}
 
-const Post = ({post}) => {
+const Post = ({post}: PostProps) => {
   return (
     <Layout post>
       <Head>
@@ -14,36 +28,18 @@ const Post = ({post}) => {
       <Article>
         <PostTitle>{post.title}</PostTitle>
         <p>{post.body}</p>
-        <Input type="text" placeholder='Join the discussion...'/>
+        <BackToHome>
+          <Link href="/">
+            <a>← Back to home</a>
+          </Link>
+        </BackToHome>
       </Article>
+      <Comments comments={post.comments} postId={post.id}/>
     </Layout>
   )
 }
 
 export default Post
-
-const Article = styled.article`
-  font-size: 2rem;
-`
-
-const PostTitle = styled.h1`
-  font-size: 5rem;
-`
-
-const Input = styled.input`
-  display: block;
-  width: 100%;
-  padding: 1rem;
-  margin-top: 0.5rem;
-  margin-bottom: 2rem;
-  border-radius: 5px;
-  border: 2px solid lightgray;
-  &:focus {
-    outline: none;
-    box-shadow: 0px 0px 3px #000ac8;
-    border-radius: 5px;
-  }
-`
 
 export const getStaticPaths: GetStaticPaths = async () => {
   const response = await axios.get('/posts')
@@ -63,3 +59,16 @@ export const getStaticProps: GetStaticProps = async ({params}) => {
     }
   }
 }
+
+const Article = styled.article`
+  font-size: 2rem;
+`
+
+const PostTitle = styled.h1`
+  font-size: 5rem;
+`
+
+const BackToHome = styled.div`
+  margin: 3rem 0 0;
+`
+
