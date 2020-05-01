@@ -1,6 +1,6 @@
 import {Layout} from '../../components/Layout'
 import Head from 'next/head'
-import {GetStaticPaths, GetStaticProps} from 'next'
+import {GetStaticProps, GetStaticPaths} from 'next'
 import styled from 'styled-components'
 import axios from '../../axios/axios-blog';
 import Link from 'next/link';
@@ -34,7 +34,7 @@ const Post = ({post}: PostProps) => {
           </Link>
         </BackToHome>
       </Article>
-      <Comments comments={post.comments} postId={post.id}/>
+      <Comments postId={post.id}/>
     </Layout>
   )
 }

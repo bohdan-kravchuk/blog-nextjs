@@ -1,6 +1,6 @@
 import Head from 'next/head'
 import { Layout, siteTitle } from '../components/Layout'
-import { GetStaticProps } from 'next'
+import { GetServerSideProps } from 'next'
 import {PostsList} from '../components/PostsList';
 import axios from '../axios/axios-blog';
 
@@ -25,7 +25,7 @@ const Home: React.FC<HomeProps> = ({posts}: HomeProps) => {
 
 export default Home
 
-export const getStaticProps: GetStaticProps = async () => {
+export const getServerSideProps: GetServerSideProps = async () => {
   const response = await axios.get('/posts')
   const posts = response.data
   return {

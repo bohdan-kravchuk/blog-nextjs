@@ -1,79 +1,69 @@
-import styled from 'styled-components';
-import { useState } from 'react';
+import styled, {keyframes} from 'styled-components';
+import {useEffect, useState, useContext} from 'react';
 import axios from '../axios/axios-blog';
+import {CommentsContext} from '../context/comments/CommentsContext';
 
-interface CommentsProps {
-  comments: {
-    id?: number
-    postId: number
-    body: string
-  }[]
-  postId: number
-}
-
-interface Icomments {
+interface IComments {
   body: string
   postId: number
 }
 
-const createComment = (commentData: Icomments) => {
+const createComment = (commentData: IComments) => {
   const raw = JSON.stringify(commentData)
   axios.post('/comments', raw, {headers: {"Content-Type": "application/json"}})
 }
 
-
-export const Comments = ({comments, postId}: CommentsProps) => {
+export const Comments = ({postId}) => {
   const [newComment, setNewComment] = useState<string>('')
-  const [addedComments, setAddedComments] = useState<Icomments[]>([])
+  const {getComments, state, addComment} = useContext(CommentsContext)
+  
+  useEffect(() => {
+    getComments(postId)
+  }, [])
   
   const newCommentHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
     setNewComment(event.target.value)
   }
   
-  const addedCommentsHandler = () => {
+  const addCommentHandler = () => {
     if (newComment.trim()) {
-      setAddedComments(prevState => {
-        const newArr = prevState.slice();
-        newArr.push({body: newComment, postId})
-        return newArr
-      })
-      
+      addComment({body: newComment, postId})
       createComment({body: newComment, postId})
       setNewComment('')
     }
   }
   
-  const onKeyHandler = (event: React.KeyboardEvent<HTMLInputElement>) => {
+  const onKeyCommentHandler = (event: React.KeyboardEvent<HTMLInputElement>) => {
     if (event.key === 'Enter' && newComment.trim()) {
-      setAddedComments(prevState => {
-        const newArr = prevState.slice();
-        newArr.push({body: newComment, postId})
-        return newArr
-      })
-  
+      addComment({body: newComment, postId})
       createComment({body: newComment, postId})
       setNewComment('')
     }
   }
   
-  const commentsQuantity = comments.length + addedComments.length
-  
+  const comments = state.comments
+
   return (
     <CommentSection>
       <CommentCounter>
-        {commentsQuantity + (commentsQuantity > 1 ? ' comments' : ' comment')}
+        {comments.length + (comments.length > 1 ? ' comments' : ' comment')}
       </CommentCounter>
       <Input
         type="text"
         placeholder='Join the discussion...'
         value={newComment}
         onChange={newCommentHandler}
-        onKeyDown={onKeyHandler}
+        onKeyDown={onKeyCommentHandler}
       />
       <Right>
-        <Button onClick={addedCommentsHandler}>Post</Button>
+        <Button onClick={addCommentHandler}>Post</Button>
       </Right>
-      {comments.concat(addedComments).reverse().map(comment => (<CommentCard>{comment.body}</CommentCard>))}
+      {state.loading
+        ? <Center><Loader><div /><div /><div /><div /><div /><div /><div /><div /></Loader></Center>
+        : comments.slice().reverse().map(comment => (
+            <CommentCard>{comment.body}</CommentCard>
+          ))
+      }
     </CommentSection>
   )
 }
@@ -129,3 +119,94 @@ const CommentCard = styled.div`
   margin-bottom: 1rem;
   font-size: 1.6rem;
 `
+
+const Center = styled.div`
+  text-align: center;
+`
+
+const ldsRoller = keyframes`
+    0% {
+      transform: rotate(0deg);
+  }
+    100% {
+      transform: rotate(360deg);
+  }
+`
+
+const Loader = styled.div`
+  display: inline-block;
+  position: relative;
+  width: 80px;
+  height: 80px;
+  div {
+    animation: ${ldsRoller} 1.2s cubic-bezier(0.5, 0, 0.5, 1) infinite;
+    transform-origin: 40px 40px;
+  }
+  div:after {
+  content: " ";
+  display: block;
+  position: absolute;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #616161;
+  margin: -4px 0 0 -4px;
+}
+  div:nth-child(1) {
+    animation-delay: -0.036s;
+  }
+  div:nth-child(1):after {
+    top: 63px;
+    left: 63px;
+  }
+  div:nth-child(2) {
+    animation-delay: -0.072s;
+  }
+  div:nth-child(2):after {
+    top: 68px;
+    left: 56px;
+  }
+  div:nth-child(3) {
+    animation-delay: -0.108s;
+  }
+  div:nth-child(3):after {
+    top: 71px;
+    left: 48px;
+  }
+  div:nth-child(4) {
+    animation-delay: -0.144s;
+  }
+  div:nth-child(4):after {
+    top: 72px;
+    left: 40px;
+  }
+  div:nth-child(5) {
+    animation-delay: -0.18s;
+  }
+  div:nth-child(5):after {
+    top: 71px;
+    left: 32px;
+  }
+  div:nth-child(6) {
+    animation-delay: -0.216s;
+  }
+  div:nth-child(6):after {
+    top: 68px;
+    left: 24px;
+  }
+  div:nth-child(7) {
+    animation-delay: -0.252s;
+  }
+  div:nth-child(7):after {
+    top: 63px;
+    left: 17px;
+  }
+  div:nth-child(8) {
+    animation-delay: -0.288s;
+  }
+  div:nth-child(8):after {
+    top: 56px;
+    left: 12px;
+  }
+`
+
