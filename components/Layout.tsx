@@ -1,5 +1,4 @@
 import Head from 'next/head'
-import Link from 'next/link'
 import styled from 'styled-components'
 import {Navbar} from './Navbar';
 import {Footer} from './Footer'
@@ -8,10 +7,9 @@ export const siteTitle = 'Blog'
 
 interface LayoutProps {
   children: React.ReactNode
-  post?: boolean
 }
 
-export const Layout: React.FC<LayoutProps> = ({children, post}: LayoutProps) => {
+export const Layout: React.FC<LayoutProps> = ({children}: LayoutProps) => {
   return (
     <Container>
       <Head>

@@ -4,11 +4,15 @@ import {useState} from 'react';
 import axios from '../axios/axios-blog';
 import Head from 'next/head';
 
-const createPost = (postData: object) => {
+interface IPostData {
+  title: string
+  body: string
+}
+
+const createPost = (postData: IPostData) => {
   const raw = JSON.stringify(postData)
   axios.post('/posts', raw, {headers: {"Content-Type": "application/json"}})
 }
-
 
 const New = () => {
   let [title, setTitle] = useState<string>('')

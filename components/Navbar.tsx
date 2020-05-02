@@ -1,7 +1,7 @@
 import styled from 'styled-components'
 import Link from 'next/link';
 
-export const Navbar = () => {
+export const Navbar: React.FC = () => {
   return (
     <NavbarContainer>
       <Link href="/"><a>Home</a></Link>

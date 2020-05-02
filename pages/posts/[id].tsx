@@ -1,12 +1,12 @@
 import {Layout} from '../../components/Layout'
 import Head from 'next/head'
-import {GetStaticProps, GetStaticPaths} from 'next'
+import {GetServerSideProps} from 'next'
 import styled from 'styled-components'
 import axios from '../../axios/axios-blog';
 import Link from 'next/link';
 import {Comments} from '../../components/Comments';
 
-interface PostProps {
+export interface PostProps {
   post: {
     title: string
     id: number
@@ -21,7 +21,7 @@ interface PostProps {
 
 const Post = ({post}: PostProps) => {
   return (
-    <Layout post>
+    <Layout>
       <Head>
         <title>{post.title}</title>
       </Head>
@@ -34,23 +34,14 @@ const Post = ({post}: PostProps) => {
           </Link>
         </BackToHome>
       </Article>
-      <Comments postId={post.id}/>
+      <Comments postId={post.id} comments={post.comments}/>
     </Layout>
   )
 }
 
 export default Post
 
-export const getStaticPaths: GetStaticPaths = async () => {
-  const response = await axios.get('/posts')
-  const paths = response.data.map(post => ({params: {id: `${post.id}`}}))
-  return {
-    paths,
-    fallback: false
-  }
-}
-
-export const getStaticProps: GetStaticProps = async ({params}) => {
+export const getServerSideProps: GetServerSideProps = async ({params}) => {
   const response = await axios.get(`/posts/${params.id}?_embed=comments`)
   const post = response.data
   return {

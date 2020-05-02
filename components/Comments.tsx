@@ -1,33 +1,38 @@
 import styled, {keyframes} from 'styled-components';
-import {useEffect, useState, useContext} from 'react';
+import {useState, useContext} from 'react';
 import axios from '../axios/axios-blog';
 import {CommentsContext} from '../context/comments/CommentsContext';
 
-interface IComments {
-  body: string
+interface IComment {
+  id?: number
   postId: number
+  body: string
 }
 
-const createComment = (commentData: IComments) => {
+interface CommentsProps {
+  postId: number
+  comments: IComment[]
+}
+
+const createComment = (commentData: IComment) => {
   const raw = JSON.stringify(commentData)
   axios.post('/comments', raw, {headers: {"Content-Type": "application/json"}})
 }
 
-export const Comments = ({postId}) => {
+export const Comments: React.FC<CommentsProps> = ({postId, comments}: CommentsProps) => {
   const [newComment, setNewComment] = useState<string>('')
-  const {getComments, state, addComment} = useContext(CommentsContext)
-  
-  useEffect(() => {
-    getComments(postId)
-  }, [])
-  
+  const {setCommentsState, state, addCommentToState} = useContext(CommentsContext)
+ 
   const newCommentHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
     setNewComment(event.target.value)
   }
   
   const addCommentHandler = () => {
     if (newComment.trim()) {
-      addComment({body: newComment, postId})
+      if (!state.comments.length) {
+        setCommentsState(comments)
+      }
+      addCommentToState({body: newComment, postId})
       createComment({body: newComment, postId})
       setNewComment('')
     }
@@ -35,18 +40,21 @@ export const Comments = ({postId}) => {
   
   const onKeyCommentHandler = (event: React.KeyboardEvent<HTMLInputElement>) => {
     if (event.key === 'Enter' && newComment.trim()) {
-      addComment({body: newComment, postId})
+      if (!state.comments.length) {
+        setCommentsState(comments)
+      }
+      addCommentToState({body: newComment, postId})
       createComment({body: newComment, postId})
       setNewComment('')
     }
   }
   
-  const comments = state.comments
+  const allComments = state.comments.length ? state.comments : comments
 
   return (
     <CommentSection>
       <CommentCounter>
-        {comments.length + (comments.length > 1 ? ' comments' : ' comment')}
+        {allComments.length + (allComments.length > 1 ? ' comments' : ' comment')}
       </CommentCounter>
       <Input
         type="text"
@@ -58,12 +66,9 @@ export const Comments = ({postId}) => {
       <Right>
         <Button onClick={addCommentHandler}>Post</Button>
       </Right>
-      {state.loading
-        ? <Center><Loader><div /><div /><div /><div /><div /><div /><div /><div /></Loader></Center>
-        : comments.slice().reverse().map(comment => (
-            <CommentCard>{comment.body}</CommentCard>
-          ))
-      }
+      {allComments.slice().reverse().map(comment => (
+        <CommentCard key={comment.id}>{comment.body}</CommentCard>
+      ))}
     </CommentSection>
   )
 }

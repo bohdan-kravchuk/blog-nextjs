@@ -1,3 +1,2 @@
-export const GET_COMMENTS = 'GET_COMMENTS'
-export const SET_LOADING = 'SET_LOADING'
+export const SET_COMMENTS = 'SET_COMMENTS'
 export const ADD_COMMENT = 'ADD_COMMENT'
