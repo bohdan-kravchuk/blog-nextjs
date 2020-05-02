@@ -66,8 +66,8 @@ export const Comments: React.FC<CommentsProps> = ({postId, comments}: CommentsPr
       <Right>
         <Button onClick={addCommentHandler}>Post</Button>
       </Right>
-      {allComments.slice().reverse().map(comment => (
-        <CommentCard key={comment.id}>{comment.body}</CommentCard>
+      {allComments.slice().reverse().map((comment, index) => (
+        <CommentCard key={index}>{comment.body}</CommentCard>
       ))}
     </CommentSection>
   )
