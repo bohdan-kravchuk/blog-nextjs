@@ -1,4 +1,5 @@
 import {PostCard} from './PostCard';
+import styled from 'styled-components';
 
 interface PostsListProps {
   posts: {
@@ -10,10 +11,14 @@ interface PostsListProps {
 
 export const PostsList: React.FC<PostsListProps> = ({posts}: PostsListProps) => {
   return (
-    <ul>
+    <List>
       {posts.slice().reverse().map(post => (
         <PostCard key={post.id} {...post} />
       ))}
-    </ul>
+    </List>
   )
 }
+
+const List = styled.ul`
+  padding: 0;
+`

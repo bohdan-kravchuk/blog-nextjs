@@ -27,7 +27,6 @@ export const CommentsState: React.FC = ({children}) => {
   const addCommentToState = (comment: IComment) => {
     dispatch({type: ADD_COMMENT, payload: comment})
   }
-  
  
   return (
     <CommentsContext.Provider value={{state, setCommentsState, addCommentToState}}>
